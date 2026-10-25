@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>لعبةُ نصبِ الفعلِ المضارعِ وجزمِهِ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Reem+Kufi:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e9f5f1;--card:#fff;--ink:#12355b;--mut:#4a6a85;--g:#0f8b6d;--gd:#0a6a53;--y:#f4b41a;--r:#c8372d;--rb:#fdecea;--gb:#dff5ec;--ln:#c9ddd6;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d2230;--card:#143349;--ink:#eaf4fb;--mut:#9fbdd1;--g:#2bbf98;--gd:#1c9c7a;--r:#ff8a80;--rb:#3d2326;--gb:#12392f;--ln:#27506a}}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);color:var(--ink);font-family:Amiri,"Traditional Arabic",Tahoma,serif;font-size:20px;line-height:1.9;direction:rtl;text-align:right}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+h1,h2,.k{font-family:"Reem Kufi",Amiri,Tahoma,sans-serif}
+main{max-width:640px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:2px solid var(--ln);border-radius:20px;padding:22px}
+.hide{display:none!important}
+h1{font-size:30px;line-height:1.5;margin:0 0 6px;color:var(--g)}
+p{margin:6px 0}
+.mut{color:var(--mut)}
+input{width:100%;font:inherit;font-size:22px;padding:10px 14px;border:2px solid var(--ln);border-radius:14px;background:var(--bg);color:var(--ink);text-align:right;direction:rtl;margin:10px 0}
+input:focus,button:focus-visible{outline:3px solid var(--y);outline-offset:2px}
+button{font:inherit;font-family:"Reem Kufi",Amiri,sans-serif;font-size:21px;border:0;border-radius:14px;padding:10px 22px;cursor:pointer;background:var(--g);color:#fff}
+button:hover{background:var(--gd)}
+.sec{background:var(--y);color:#3a2a00}.sec:hover{background:#e3a40f}
+.bar{height:12px;background:var(--ln);border-radius:9px;overflow:hidden;margin:8px 0 14px}
+.bar i{display:block;height:100%;width:0;background:var(--g);transition:width .4s}
+.top{display:flex;justify-content:space-between;color:var(--mut);font-size:18px}
+.q{font-size:25px;line-height:2.1;margin:6px 0 14px;font-weight:700}
+.opt{display:block;width:100%;text-align:right;background:var(--bg);color:var(--ink);border:2px solid var(--ln);margin:9px 0;font-family:Amiri,serif;font-size:23px;line-height:1.8}
+.opt:hover:not(:disabled){border-color:var(--g);background:var(--bg)}
+.opt.ok{background:var(--gb);border-color:var(--g)}
+.opt.no{background:var(--rb);border-color:var(--r)}
+.opt:disabled{cursor:default}
+.fb{margin-top:14px;padding:14px 16px;border-radius:14px;font-size:21px}
+.fb.ok{background:var(--gb);border:2px solid var(--g)}
+.fb.no{background:var(--rb);border:2px solid var(--r)}
+.fb b{display:block;font-family:"Reem Kufi",sans-serif;font-size:23px}
+#nx{margin-top:14px}
+canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50}
+#cert{width:100%;height:auto;border-radius:12px;border:2px solid var(--ln);display:block;margin:12px 0}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+</head>
+<body>
+<canvas id="fx"></canvas>
+<main>
+ <section id="s1" class="card">
+  <h1>نصبُ الفعلِ المضارعِ وجزمُهُ</h1>
+  <p class="mut">عشرونَ سؤالًا في اللغةِ العربيةِ الفصحى، وفي النهايةِ شهادةٌ باسمِكَ يمكنُ حفظُها.</p>
+  <label for="nm" class="k" style="font-size:22px">اكتبِ اسمَكَ للبدءِ:</label>
+  <input id="nm" maxlength="30" autocomplete="off" placeholder="اسمُكَ هنا">
+  <p id="er" class="hide" style="color:var(--r)">اكتبِ اسمَكَ أوّلًا من فضلِكَ.</p>
+  <button id="go">ابدأِ اللعبةَ</button>
+ </section>
+
+ <section id="s2" class="card hide">
+  <div class="top"><span id="pn"></span><span id="sc"></span></div>
+  <div class="bar"><i id="pb"></i></div>
+  <div class="q" id="qt"></div>
+  <div id="ops"></div>
+  <div id="fb" class="fb hide"></div>
+  <button id="nx" class="hide"></button>
+ </section>
+
+ <section id="s3" class="card hide">
+  <h1 id="rt"></h1>
+  <p id="rs" class="mut"></p>
+  <canvas id="cert" width="1100" height="780"></canvas>
+  <div class="row">
+   <button id="sv">احفظِ الشهادةَ</button>
+   <button id="ag" class="sec">العبْ مرةً أخرى</button>
+  </div>
+  <p id="sm" class="mut hide"></p>
+ </section>
+</main>
+<script>
+// [النوع، السؤال، الخيارات، الإجابة، الشرح] — النوع: m اختيار من متعدد، t صح وخطأ
+var Q=[
+["m","ما علامةُ نصبِ الفعلِ المضارعِ صحيحِ الآخرِ؟",["الضمّةُ","الفتحةُ","الكسرةُ","السكونُ"],1,"يُنصبُ الفعلُ المضارعُ صحيحُ الآخرِ بالفتحةِ الظاهرةِ على آخرِهِ، مثلُ: لنْ يَسيلَ الماءُ."],
+["t","«لنْ يَذوبَ الثلجُ»: الفعلُ «يَذوبَ» منصوبٌ وعلامةُ نصبِهِ الفتحةُ.",true,"«لنْ» حرفُ نصبٍ، والفعلُ بعدَها منصوبٌ بالفتحةِ الظاهرةِ على آخرِهِ."],
+["m","«تَنتظرُ الأرضُ المطرَ كَيْ ... الزرعُ». اختَرِ الفعلَ الصحيحَ:",["يَنمُو","يَنمُ","يَنمُونَ","يَنمُوَ"],3,"«كَيْ» تنصبُ الفعلَ المضارعَ، والواوُ حرفُ علةٍ تظهرُ عليها الفتحةُ: يَنمُوَ."],
+["m","اختَرِ الفعلَ الصحيحَ: «لمْ ... النهرُ في الصيفِ»",["يَجْرِ","يَجْرِيَ","يَجْرِي","يَجْرُونَ"],0,"«لمْ» حرفُ جزمٍ، وإذا كانَ آخرُ المضارعِ ياءً حُذفتْ عندَ الجزمِ: لمْ يَجْرِ."],
+["m","أيُّ الجملِ الآتيةِ فيها فعلٌ مضارعٌ مرفوعٌ؟",["لَنْ يُضيءَ المصباحُ","لَمْ يُضِئِ المصباحُ","كَيْ يُضيءَ المصباحُ","يُضيءُ المصباحُ الغرفةَ"],3,"الفعلُ «يُضيءُ» في الجملةِ الرابعةِ مرفوعٌ لأنَّهُ لمْ يسبقْهُ ناصبٌ ولا جازمٌ، وعلامةُ رفعِهِ الضمّةُ؛ أمّا الأولى والثالثةُ فمنصوبتانِ، والثانيةُ مجزومةٌ."],
+["m","أيُّ هذهِ الأدواتِ تجزمُ الفعلَ المضارعَ؟",["أَنْ","لَنْ","لَمْ","كَيْ"],2,"«لَمْ» حرفُ جزمٍ، أمّا «أَنْ» و«لَنْ» و«كَيْ» فهيَ حروفُ نصبٍ."],
+["m","أيُّ الجملِ الآتيةِ فيها فعلٌ مضارعٌ مجزومٌ؟",["لَنْ يَسقُطَ الوَرَقُ","سَيَسقُطُ الوَرَقُ","كَيْ يَسقُطَ الوَرَقُ","لَمْ يَسقُطِ الوَرَقُ"],3,"الفعلُ «يَسقُطْ» في الجملةِ الرابعةِ مجزومٌ بـ«لَمْ»، وأمّا الأولى والثالثةُ فمنصوبتانِ، والثانيةُ مرفوعةٌ."],
+["t","تُجزمُ الأفعالُ الخمسةُ بحذفِ النونِ، مثلُ: «النجمانِ لمْ يَلمعا».",true,"الأفعالُ الخمسةُ تُنصبُ وتُجزمُ بحذفِ النونِ، فأصلُ «يَلمعا» هوَ «يَلمعانِ»."],
+["m","ما علامةُ نصبِ الفعلِ «تَسيرا» في: «السفينتانِ لنْ تَسيرا»؟",["الفتحةُ الظاهرةُ","الكسرةُ","ثبوتُ النونِ","حذفُ النونِ"],3,"«تَسيرا» منَ الأفعالِ الخمسةِ، وهيَ تُنصبُ بحذفِ النونِ، وأصلُها «تَسيرانِ»."],
+["m","ما علامةُ نصبِ الفعلِ «يَبقى» في: «لنْ يَبقى الثلجُ طويلًا»؟",["السكونُ","الفتحةُ الظاهرةُ","الفتحةُ المقدَّرةُ","حذفُ النونِ"],2,"آخرُ الفعلِ ألفٌ لا تقبلُ الحركةَ، فتُقدَّرُ عليها الفتحةُ للتعذّرِ."],
+["m","ما علامةُ جزمِ الفعلِ «يَعْلُ» في: «لَمْ يَعْلُ الدخانُ في الغرفةِ»؟",["السكونُ","الفتحةُ","حذفُ النونِ","حذفُ حرفِ العلةِ (الواوِ)"],3,"أصلُ الفعلِ «يَعلُو»، وهوَ معتلُّ الآخرِ بالواوِ، فيُجزمُ بحذفِ حرفِ العلةِ، والضمّةُ قبلَهُ دليلٌ عليهِ."],
+["m","اختَرِ الفعلَ الصحيحَ: «لَمّا ... الشمسُ»",["تَغْرُبِ","تَغْرُبَ","تَغْرُبُ","تَغْرُبانِ"],0,"«لَمّا» حرفُ جزمٍ، والفعلُ بعدَها مجزومٌ بالسكونِ، وكُسرَ آخرُهُ لالتقاءِ الساكنينِ."],
+["m","أيُّ الأفعالِ الآتيةِ مِنَ الأفعالِ الخمسةِ؟",["يَجري","تَنمو","يَسيلُ","يَلمعانِ"],3,"الأفعالُ الخمسةُ هيَ ما اتصلَ بهِ ألفُ الاثنينِ أو واوُ الجماعةِ أو ياءُ المخاطَبةِ، و«يَلمعانِ» اتصلتْ بهِ ألفُ الاثنينِ."],
+["t","«أَنْ» و«لَنْ» و«كَيْ» مِنْ أدواتِ نصبِ الفعلِ المضارعِ.",true,"هذهِ الثلاثةُ حروفُ نصبٍ تدخلُ على المضارعِ فتنصبُهُ."],
+["m","ما إعرابُ الفعلِ «يَغْلي» في: «الماءُ يَغْلي»؟",["منصوبٌ وعلامةُ نصبِهِ الفتحةُ","مرفوعٌ وعلامةُ رفعِهِ الضمّةُ المقدَّرةُ","مجزومٌ بحذفِ الياءِ","مرفوعٌ بثبوتِ النونِ"],1,"لمْ يسبقْهُ ناصبٌ ولا جازمٌ فهوَ مرفوعٌ، والضمّةُ مقدَّرةٌ على الياءِ للثِّقَلِ."],
+["m","اختَرِ الفعلَ الصحيحَ: «الوردتانِ لنْ ... »",["تَذبلانِ","تَذبلْنَ","تَذبلا","تَذبلُ"],2,"الفعلُ مِنَ الأفعالِ الخمسةِ، و«لنْ» تنصبُهُ بحذفِ النونِ: لنْ تَذبلا."],
+["t","يُرفعُ الفعلُ المضارعُ إذا سبقَهُ حرفُ نصبٍ.",false,"إذا سبقَ المضارعَ حرفُ نصبٍ فإنَّهُ يُنصبُ، ولا يُرفعُ إلّا إذا خلا مِنَ الناصبِ والجازمِ."],
+["m","أيُّ الأدواتِ الآتيةِ تنصبُ الفعلَ المضارعَ؟",["أَنْ","لَمْ","لَمّا","لا الناهيةُ"],0,"«أَنْ» حرفُ نصبٍ، أمّا «لَمْ» و«لَمّا» و«لا» الناهيةُ فتجزمُ."],
+["m","أيُّ الجملِ الآتيةِ ضُبطَ فيها الفعلُ ضبطًا صحيحًا؟",["لنْ يَشتعلُ الحطبُ","لمْ يَشتعلَ الحطبُ","لنْ يَشتعلَ الحطبُ","لمْ يَشتعلُ الحطبُ"],2,"«لنْ» تنصبُ فيُفتحُ آخرُ الفعلِ، و«لمْ» تجزمُ فيُسكَّنُ آخرُهُ."],
+["t","في «لمْ يَنكسِرِ الزجاجُ» الفعلُ «يَنكسِرْ» مجزومٌ وعلامةُ جزمِهِ السكونُ.",true,"«لمْ» تجزمُ المضارعَ صحيحَ الآخرِ بالسكونِ، وكُسرَ هنا لالتقاءِ الساكنينِ."]
+];
+var $=function(i){return document.getElementById(i)};
+var name="",i=0,score=0,done=false;
+
+// الأصوات
+var AC=null;
+function tone(f,d,t,w,v){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();var o=AC.createOscillator(),g=AC.createGain(),s=AC.currentTime+(w||0);o.type=t||"sine";o.frequency.value=f;g.gain.setValueAtTime(v||.15,s);g.gain.exponentialRampToValueAtTime(.001,s+d);o.connect(g);g.connect(AC.destination);o.start(s);o.stop(s+d)}catch(e){}}
+var snd={
+ tap:function(){tone(520,.08,"triangle")},
+ ok:function(){[523,659,784,1047].forEach(function(f,k){tone(f,.22,"triangle",k*.09)})},
+ no:function(){tone(220,.25,"sawtooth",0,.1);tone(165,.35,"sawtooth",.18,.1)},
+ end:function(){[523,659,784,659,784,1047].forEach(function(f,k){tone(f,.3,"triangle",k*.14)})}
+};
+
+// قصاصات الورق والورود
+var fx=$("fx"),cx=fx.getContext("2d"),P=[],run=false;
+function size(){fx.width=innerWidth;fx.height=innerHeight}
+addEventListener("resize",size);size();
+function burst(n){
+ var cols=["#f4b41a","#0f8b6d","#e4572e","#2f80ed","#e86aa6","#8e5bd6"],fl=["🌹","🌸","🌷","🌺","🌼"];
+ for(var k=0;k<n;k++){var fw=k%4==0;P.push({x:innerWidth*(.15+Math.random()*.7),y:innerHeight*.35,vx:(Math.random()-.5)*11,vy:-Math.random()*13-3,r:Math.random()*6,vr:(Math.random()-.5)*.4,c:cols[k%cols.length],w:8+Math.random()*8,h:5+Math.random()*7,f:fw?fl[k%fl.length]:null,s:20+Math.random()*14})}
+ if(!run){run=true;requestAnimationFrame(step)}
+}
+function step(){
+ cx.clearRect(0,0,fx.width,fx.height);
+ P=P.filter(function(p){return p.y<fx.height+40});
+ P.forEach(function(p){p.vy+=.35;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);
+  if(p.f){cx.font=p.s+"px serif";cx.textAlign="center";cx.fillText(p.f,0,0)}else{cx.fillStyle=p.c;cx.fillRect(-p.w/2,-p.h/2,p.w,p.h)}cx.restore()});
+ if(P.length)requestAnimationFrame(step);else{run=false;cx.clearRect(0,0,fx.width,fx.height)}
+}
+var reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+
+function show(id){["s1","s2","s3"].forEach(function(s){$(s).classList.toggle("hide",s!==id)});scrollTo(0,0)}
+
+function ask(){
+ var q=Q[i];done=false;
+ $("pn").textContent="السؤالُ "+(i+1)+" مِنْ "+Q.length;
+ $("sc").textContent="النقاطُ: "+score;
+ $("pb").style.width=(i/Q.length*100)+"%";
+ $("qt").textContent=q[1];
+ var ops=q[0]=="t"?["صحيحٌ","خطأٌ"]:q[2];
+ $("ops").innerHTML="";
+ ops.forEach(function(t,k){var b=document.createElement("button");b.className="opt";b.textContent=t;b.onclick=function(){pick(k)};$("ops").appendChild(b)});
+ $("fb").classList.add("hide");$("nx").classList.add("hide");
+}
+function pick(k){
+ if(done)return;done=true;
+ var q=Q[i].slice();if(q[0]=="t"){q=[q[0],q[1],null,q[2]?0:1,q[3]]}var right=q[3],bs=$("ops").children;
+ for(var j=0;j<bs.length;j++)bs[j].disabled=true;
+ bs[right].classList.add("ok");
+ var fb=$("fb");fb.classList.remove("hide","ok","no");
+ if(k==right){score++;bs[k].classList.add("ok");fb.classList.add("ok");fb.innerHTML="<b>أحسنتَ! إجابةٌ صحيحةٌ</b>"+q[4];snd.ok();if(!reduce)burst(70)}
+ else{bs[k].classList.add("no");fb.classList.add("no");fb.innerHTML="<b>إجابةٌ خاطئةٌ، لا بأسَ</b>الإجابةُ الصحيحةُ: «"+bs[right].textContent+"».<br>"+q[4];snd.no()}
+ $("sc").textContent="النقاطُ: "+score;
+ $("nx").textContent=i==Q.length-1?"اعرضِ الشهادةَ":"السؤالُ التالي";
+ $("nx").classList.remove("hide");
+}
+$("nx").onclick=function(){snd.tap();i++;if(i<Q.length)ask();else finish()};
+$("go").onclick=function(){
+ var v=$("nm").value.trim();
+ if(!v){$("er").classList.remove("hide");$("nm").focus();return}
+ name=v;snd.tap();i=0;score=0;show("s2");ask();
+};
+$("nm").onkeydown=function(e){if(e.key=="Enter")$("go").click()};
+$("ag").onclick=function(){snd.tap();$("nm").value="";$("er").classList.add("hide");show("s1")};
+
+function grade(){var p=score/Q.length;return p>=.9?"ممتازٌ":p>=.75?"جيدٌ جدًّا":p>=.5?"جيّدٌ":"يحتاجُ إلى مزيدٍ مِنَ التدريبِ"}
+function finish(){
+ $("pb").style.width="100%";show("s3");snd.end();if(!reduce)burst(160);
+ $("rt").textContent="أحسنتَ يا "+name+"!";
+ $("rs").textContent="حصلتَ على "+score+" مِنْ "+Q.length+" ("+grade()+")";
+ (document.fonts&&document.fonts.load?document.fonts.load("700 50px Amiri").catch(function(){}):Promise.resolve()).then(drawCert);
+}
+function drawCert(){
+ var c=$("cert"),x=c.getContext("2d"),W=c.width,H=c.height;
+ x.direction="rtl";x.textAlign="center";
+ x.fillStyle="#fffdf5";x.fillRect(0,0,W,H);
+ x.strokeStyle="#0f8b6d";x.lineWidth=14;x.strokeRect(24,24,W-48,H-48);
+ x.strokeStyle="#f4b41a";x.lineWidth=4;x.strokeRect(46,46,W-92,H-92);
+ var F='Amiri,"Traditional Arabic",Tahoma,serif';
+ x.fillStyle="#0f8b6d";x.font="700 70px "+F;x.fillText("شهادةُ تقديرٍ",W/2,170);
+ x.fillStyle="#12355b";x.font="400 38px "+F;x.fillText("تُمنحُ هذهِ الشهادةُ للمتفوِّقِ / للمتفوِّقةِ",W/2,260);
+ var fs=84;x.font="700 "+fs+"px "+F;
+ while(x.measureText(name).width>W-260&&fs>34){fs-=4;x.font="700 "+fs+"px "+F}
+ x.fillStyle="#c8372d";x.fillText(name,W/2,375);
+ x.strokeStyle="#f4b41a";x.lineWidth=3;x.beginPath();x.moveTo(250,405);x.lineTo(W-250,405);x.stroke();
+ x.fillStyle="#12355b";x.font="400 40px "+F;
+ x.fillText("لإتمامِهِ لعبةَ «نصبِ الفعلِ المضارعِ وجزمِهِ» في اللغةِ العربيةِ",W/2,490);
+ x.font="700 50px "+F;x.fillText("النتيجةُ: "+score+" مِنْ "+Q.length+" — "+grade(),W/2,580);
+ x.font="400 32px "+F;x.fillStyle="#4a6a85";
+ x.fillText(new Date().toLocaleDateString("ar",{year:"numeric",month:"long",day:"numeric"}),W/2,670);
+ x.font="60px serif";x.fillText("🌹",150,170);x.fillText("🌹",W-150,170);x.fillText("🌸",150,H-110);x.fillText("🌸",W-150,H-110);
+}
+$("sv").onclick=function(){
+ var c=$("cert"),m=$("sm");m.classList.remove("hide");
+ c.toBlob(function(b){
+  var fn="شهادة-"+name.replace(/[\\\/:*?"<>|\s]+/g,"-")+".png";
+  if(window.claude&&claude.use){
+   claude.use("downloads").then(function(d){
+    if(!d){m.textContent="اضغطْ على الشهادةِ مطوّلًا ثمَّ اختَرْ «حفظ الصورة».";return}
+    d.save({filename:fn,data:b}).then(function(){m.textContent="تمَّ حفظُ الشهادةِ."}).catch(function(){m.textContent="لمْ يتمَّ الحفظُ. يمكنُكَ الضغطُ على الشهادةِ مطوّلًا لحفظِ الصورةِ."});
+   });
+  }else{var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=fn;a.click();m.textContent="تمَّ حفظُ الشهادةِ."}
+ },"image/png");
+};
+</script>
+</body>
+</html>
